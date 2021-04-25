@@ -6,30 +6,26 @@ import com.kantar.sessionsjob.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class SessionReport {
     public List<Session> prepareSessionReport(List<Statement> statements) {
-        int statementsSize = statements.size();
         List<Session> sessions = new ArrayList<>();
         for (Statement statement : statements) {
             LocalDateTime startTime = TimeUtil.convertDateToLocalDateTime(statement.getStartTime());
 
             int indexOfActualElement = statements.indexOf(statement);
             int nextIndex = indexOfActualElement + 1;
-
-            LocalDateTime endTime;
-            if (nextIndex < statementsSize) {
-                endTime = TimeUtil.convertDateToLocalDateTime(statements.get(nextIndex).getStartTime()).minusSeconds(1);
-                if (TimeUtil.isNotSameDate(statement.getStartTime(), TimeUtil.convertLocalDateTimeToDate(endTime))) {
-                    endTime = startTime.toLocalDate().atTime(LocalTime.MAX);
-                }
-            } else {
-                endTime = startTime.toLocalDate().atTime(LocalTime.MAX);
+            LocalDateTime nextSessionStartTime;
+            try {
+                nextSessionStartTime = TimeUtil.convertDateToLocalDateTime(statements.get(nextIndex).getStartTime());
+            } catch (IndexOutOfBoundsException e) {
+                nextSessionStartTime = null;
             }
+
+            LocalDateTime endTime = new EndTimeCalculator().endTimeCalculate(startTime, nextSessionStartTime);
 
             sessions.add(createSession(
                     statement.getHomeNo() + "",
