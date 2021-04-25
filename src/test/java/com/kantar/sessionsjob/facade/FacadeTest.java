@@ -17,7 +17,7 @@ class FacadeTest {
     void prepareSessionReport() throws IOException {
         String inputFile = ResourcePathUtil.getStringAbsolutePathToResource(this, "input-statements.psv");
         String expectedSessionsFile = ResourcePathUtil.getStringAbsolutePathToResource(this, "expected-sessions.psv");
-        String actualSessionBeansFile = ResourcePathUtil.getStringAbsolutePathToResource(this, "actual-sessionBeans.psv");
+        String actualSessionBeansFile = ResourcePathUtil.getStringAbsolutePathToResource(this, "") + "/actual-sessionBeans.psv";
 
         new Facade(inputFile, actualSessionBeansFile).prepareSessionReport();
 
