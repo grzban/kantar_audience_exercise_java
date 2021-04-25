@@ -4,10 +4,12 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class TimeUtil {
+    private static final String dateFormatterPatten = "yyyyMMddHHmmss";
 
     public static LocalDateTime convertDateToLocalDateTime(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -27,6 +29,14 @@ public class TimeUtil {
     }
 
     public static String convertDateToString(Date date) {
-        return new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+        return new SimpleDateFormat(dateFormatterPatten).format(date);
+    }
+
+    public static LocalDateTime convertStringToLocalDateTime(String stringDate) {
+        return LocalDateTime.parse(stringDate, DateTimeFormatter.ofPattern(dateFormatterPatten));
+    }
+
+    public static String convertLocalDateTimeToString(LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern(dateFormatterPatten));
     }
 }
