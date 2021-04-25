@@ -2,7 +2,7 @@ package com.kantar.sessionsjob.facade;
 
 import com.kantar.sessionsjob.dao.StatementDao;
 import com.kantar.sessionsjob.handlers.FileHandler;
-import com.kantar.sessionsjob.logic.SessionReport;
+import com.kantar.sessionsjob.logic.SessionsReport;
 import com.kantar.sessionsjob.model.Session;
 import com.kantar.sessionsjob.model.Statement;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -48,25 +47,12 @@ public class Facade {
     public void prepareSessionReport() {
         readDataFromFile();
         StatementDao statementDao = buildStatementsDao();
-        List<Session> dataToWrite = new ArrayList<>();
-        dataToWrite.add(createHeader());
+        SessionsReport sessionsReport = SessionsReport.builder().build();
         statementDao.getHomeIDs().forEach(homeID -> {
             List<Statement> sessionsForHomeID = statementDao.getStatementsForHomeID(homeID);
-            dataToWrite.addAll(new SessionReport().prepareSessionReport(sessionsForHomeID));
+            sessionsReport.addDataToWrite(sessionsForHomeID);
         });
-        writeDataToFile(dataToWrite);
-    }
-
-    private Session createHeader() {
-        return Session
-                .builder()
-                .homeNo("HomeNo")
-                .channel("Channel")
-                .startTime("Starttime")
-                .activity("Activity")
-                .endTime("EndTime")
-                .duration("Duration")
-                .build();
+        writeDataToFile(sessionsReport.getDataToWrite());
     }
 
     private void readDataFromFile() {

@@ -3,6 +3,8 @@ package com.kantar.sessionsjob.logic;
 import com.kantar.sessionsjob.model.Session;
 import com.kantar.sessionsjob.model.Statement;
 import com.kantar.sessionsjob.util.TimeUtil;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -10,8 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class SessionReport {
-    public List<Session> prepareSessionReport(List<Statement> statements) {
+@Getter
+public class SessionsReport {
+    private final List<Session> dataToWrite;
+
+    @Builder
+    public SessionsReport() {
+        dataToWrite = new ArrayList<>();
+        dataToWrite.add(createHeader());
+    }
+
+    public void addDataToWrite(List<Statement> data) {
+        dataToWrite.addAll(prepareSessionReport(data));
+    }
+
+    private List<Session> prepareSessionReport(List<Statement> statements) {
         List<Session> sessions = new ArrayList<>();
         for (Statement statement : statements) {
             LocalDateTime startTime = TimeUtil.convertDateToLocalDateTime(statement.getStartTime());
@@ -48,6 +63,18 @@ public class SessionReport {
                 .channel(channel)
                 .activity(activity)
                 .duration(duration)
+                .build();
+    }
+
+    private Session createHeader() {
+        return Session
+                .builder()
+                .homeNo("HomeNo")
+                .channel("Channel")
+                .startTime("Starttime")
+                .activity("Activity")
+                .endTime("EndTime")
+                .duration("Duration")
                 .build();
     }
 }
