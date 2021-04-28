@@ -13,7 +13,7 @@ public class EndTimeCalculator {
         } else {
             endTime = nextStartTime.minusSeconds(1);
         }
-        if (TimeUtil.isNotSameDate(TimeUtil.convertLocalDateTimeToDate(startTime), TimeUtil.convertLocalDateTimeToDate(endTime))) {
+        if (TimeUtil.isNotSameDate(startTime, endTime)) {
             endTime = getEndOfDay(startTime);
         }
 
