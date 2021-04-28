@@ -38,12 +38,16 @@ public class FileHandler {
 
     public void writeDataToFile(List<Session> dataToWrite) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         Writer writer = new FileWriter(outputFilePath);
-
+        String lineEnd = CSVWriter.DEFAULT_LINE_END;
+        String operatingSystem = System.getProperty("os.name");
+        if (operatingSystem.contains("Windows")) {
+            lineEnd = CSVWriter.RFC4180_LINE_END;
+        }
         StatefulBeanToCsvBuilder<Session> builder = new StatefulBeanToCsvBuilder<>(writer);
         StatefulBeanToCsv<Session> beanToCsv = builder
                 .withSeparator('|')
                 .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                .withLineEnd(CSVWriter.DEFAULT_LINE_END)
+                .withLineEnd(lineEnd)
                 .build();
         beanToCsv.write(dataToWrite);
         writer.close();
