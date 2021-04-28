@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalField;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,19 +26,22 @@ public class StatementDao {
     public Set<Integer> getHomeIDs() {
         Set<Integer> homeIDs = new LinkedHashSet<>();
 
-        statements.forEach(statement ->
-                homeIDs.add(statement.getHomeNo())
-        );
+        statements.forEach(statement -> {
+            int homeNo = statement.parseHomeNoInt();
+            if (homeNo != 0) {
+                homeIDs.add(statement.parseHomeNoInt());
+            }
+        });
         log.info("Home IDs: {}", homeIDs);
         return homeIDs;
     }
 
     public List<Statement> getStatementsForHomeID(int homeID) {
         return statements.stream()
-                .filter(statement -> statement.getHomeNo() == homeID)
+                .filter(statement -> statement.parseHomeNoInt() == homeID)
                 .collect(Collectors.toList())
                 .stream()
-                .sorted(Comparator.comparingLong(date -> date.getStartTime().getTime()))
+                .sorted(Comparator.comparing(Statement :: parseTime))
                 .collect(Collectors.toList());
     }
 }

@@ -21,7 +21,11 @@ class DurationCalculatorTest {
             "20200101210000,20200101235959,10800",
             "20200101200000,20200101235959,14400",
             "20200102060000,20200102235959,64800",
-            "20200102060000,20200102235959,64800"
+            "20200102060000,20200102235959,64800",
+            "20210328000000,20210328005959,3600",
+            "20210328010000,20210328015959,3600",
+            "20210328020000,20210328025959,3600",
+            "20210328030000,20210328235959,75600"
     })
     void durationCalculateWithStartAndEndTime(String startTime, String endTime, long expectedDuration) {
         DurationCalculator durationCalculator = new DurationCalculator();
@@ -41,7 +45,11 @@ class DurationCalculatorTest {
             "20200101210000,,10800",
             "20200101200000,,14400",
             "20200102060000,,64800",
-            "20200102060000,20200104060000,64800"
+            "20200102060000,20200104060000,64800",
+            "20210328000000,20210328010000,3600",
+            "20210328010000,20210328020000,3600",
+            "20210328020000,20210328030000,3600",
+            "20210328030000,,75600"
     })
     void durationCalculateWithStartAndNextActivityStartTime(String startTime, String nextActivityStartTime, long expectedDuration) {
         EndTimeCalculator endTimeCalculator = new EndTimeCalculator();

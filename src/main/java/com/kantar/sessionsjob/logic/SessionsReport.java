@@ -29,13 +29,13 @@ public class SessionsReport {
     private List<Session> prepareSessionReport(List<Statement> statements) {
         List<Session> sessions = new ArrayList<>();
         for (Statement statement : statements) {
-            LocalDateTime startTime = TimeUtil.convertDateToLocalDateTime(statement.getStartTime());
+            LocalDateTime startTime = statement.parseTime();
 
             int indexOfActualElement = statements.indexOf(statement);
             int nextIndex = indexOfActualElement + 1;
             LocalDateTime nextSessionStartTime;
             try {
-                nextSessionStartTime = TimeUtil.convertDateToLocalDateTime(statements.get(nextIndex).getStartTime());
+                nextSessionStartTime = statements.get(nextIndex).parseTime();
             } catch (IndexOutOfBoundsException e) {
                 nextSessionStartTime = null;
             }
@@ -43,9 +43,9 @@ public class SessionsReport {
             LocalDateTime endTime = new EndTimeCalculator().endTimeCalculate(startTime, nextSessionStartTime);
 
             sessions.add(createSession(
-                    statement.getHomeNo() + "",
-                    TimeUtil.convertDateToString(TimeUtil.convertLocalDateTimeToDate(startTime)),
-                    TimeUtil.convertDateToString(TimeUtil.convertLocalDateTimeToDate(endTime)),
+                    statement.parseHomeNoInt() + "",
+                    TimeUtil.convertLocalDateTimeToString(startTime),
+                    TimeUtil.convertLocalDateTimeToString(endTime),
                     statement.getChannel(),
                     statement.getActivity(),
                     new DurationCalculator().durationCalculate(startTime, endTime) + ""));

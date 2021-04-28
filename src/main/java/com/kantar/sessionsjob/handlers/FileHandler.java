@@ -43,6 +43,7 @@ public class FileHandler {
         StatefulBeanToCsv<Session> beanToCsv = builder
                 .withSeparator('|')
                 .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                .withLineEnd(CSVWriter.RFC4180_LINE_END)
                 .build();
         beanToCsv.write(dataToWrite);
         writer.close();

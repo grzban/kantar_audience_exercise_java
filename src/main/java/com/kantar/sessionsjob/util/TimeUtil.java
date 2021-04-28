@@ -1,6 +1,5 @@
 package com.kantar.sessionsjob.util;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -10,10 +9,6 @@ import java.util.Date;
 
 public class TimeUtil {
     private static final String dateFormatterPatten = "yyyyMMddHHmmss";
-
-    public static LocalDateTime convertDateToLocalDateTime(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
 
     public static Date convertLocalDateTimeToDate(LocalDateTime date) {
         return Date.from(date.atZone(ZoneId.systemDefault())
@@ -26,10 +21,6 @@ public class TimeUtil {
 
     private static Instant getInstant(Date date) {
         return date.toInstant().truncatedTo(ChronoUnit.DAYS);
-    }
-
-    public static String convertDateToString(Date date) {
-        return new SimpleDateFormat(dateFormatterPatten).format(date);
     }
 
     public static LocalDateTime convertStringToLocalDateTime(String stringDate) {
