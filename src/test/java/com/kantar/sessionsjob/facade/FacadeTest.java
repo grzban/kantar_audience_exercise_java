@@ -30,10 +30,6 @@ class FacadeTest {
 
     @AfterEach
     void tearDown() {
-        try {
-            Files.deleteIfExists(ResourcePathUtil.getPathFromString(actualSessionBeansFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResourcePathUtil.deleteFileIfExists(actualSessionBeansFile);
     }
 }
