@@ -2,11 +2,10 @@ package com.kantar.sessionsjob.dao;
 
 import com.kantar.sessionsjob.model.Statement;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalField;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,6 +17,9 @@ public class StatementDao {
 
     private final List<Statement> statements;
 
+    @Getter
+    private int badIDCounter;
+
     @Builder
     public StatementDao(@NonNull List<Statement> statements) {
         this.statements = statements;
@@ -25,11 +27,13 @@ public class StatementDao {
 
     public Set<Integer> getHomeIDs() {
         Set<Integer> homeIDs = new LinkedHashSet<>();
-
+        badIDCounter = 0;
         statements.forEach(statement -> {
-            int homeNo = statement.parseHomeNoInt();
+            int homeNo = statement.getHomeNoInt();
             if (homeNo != 0) {
-                homeIDs.add(statement.parseHomeNoInt());
+                homeIDs.add(statement.getHomeNoInt());
+            } else {
+                badIDCounter++;
             }
         });
         log.info("Home IDs: {}", homeIDs);
@@ -38,10 +42,8 @@ public class StatementDao {
 
     public List<Statement> getStatementsForHomeID(int homeID) {
         return statements.stream()
-                .filter(statement -> statement.parseHomeNoInt() == homeID)
-                .collect(Collectors.toList())
-                .stream()
-                .sorted(Comparator.comparing(Statement :: parseTime))
+                .filter(statement -> statement.getHomeNoInt() == homeID && statement.getStartTime() != null)
+                .sorted(Comparator.comparing(Statement::getStartTime))
                 .collect(Collectors.toList());
     }
 }

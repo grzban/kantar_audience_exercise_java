@@ -53,6 +53,7 @@ public class Facade {
             sessionsReport.addDataToWrite(sessionsForHomeID);
         });
         writeDataToFile(sessionsReport.getDataToWrite());
+        log.info("Found: {} bad indexes", statementDao.getBadIDCounter());
     }
 
     private void readDataFromFile() {

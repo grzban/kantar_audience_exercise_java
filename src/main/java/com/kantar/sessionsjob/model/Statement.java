@@ -27,14 +27,13 @@ public class Statement {
     private String channel;
 
     @CsvBindByName(column = "Starttime")
-//    @CsvDate("yyyyMMddHHmmss")
     @Getter(AccessLevel.NONE)
     private String startTime;
 
     @CsvBindByName(column = "Activity")
     private String activity;
 
-    public int parseHomeNoInt() {
+    public int getHomeNoInt() {
         int homeNoInt = 0;
         try {
             homeNoInt = Integer.parseInt(homeNo);
@@ -44,7 +43,7 @@ public class Statement {
         return homeNoInt;
     }
 
-    public LocalDateTime parseTime() {
+    public LocalDateTime getStartTime() {
         String pattern = "yyyyMMddHHmmss";
         DateTimeFormatter format = DateTimeFormatter.ofPattern(pattern);
         LocalDateTime time = null;
